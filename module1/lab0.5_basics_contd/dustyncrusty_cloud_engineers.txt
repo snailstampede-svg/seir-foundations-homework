@@ -1,0 +1,3 @@
+Spotter = Vince
+Teammates = Vince (will add others as they come along for the ride)
+Days + Times when your team meets = Saturday 2pm PT
