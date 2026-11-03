@@ -48,8 +48,6 @@ INFO:     Started server process [35895]
 
 I performed the COBOL core practice on this run.
 
-
-
 ## COBOL Practice
 
 - Lab run #6
@@ -115,3 +113,8 @@ CREATE TABLE transactions (
     reference TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+--------------
+For step 8 I had to change my homework repo visibility to public.
+
+git clone https://github.com/snailstampede-svg/seir-foundations-homework.git

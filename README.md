@@ -1,1 +1,0 @@
-# seir-foundations-homework
