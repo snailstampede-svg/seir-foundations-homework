@@ -34,6 +34,7 @@ INFO:     Started server process [36968]
 
 - Run#3
 At this point I realized that the unique marker for all my runs were captured in the screenshots. Once uvicorn is started, the server process number is posted to screen.
+
 - Run #4
 The following is a unique line for this instance:
 INFO:     Started server process [35723]
@@ -41,14 +42,76 @@ INFO:     Started server process [35723]
 - Run #5
 Nothing of note occurred during this run.
 - Run #6
+
+The following is a unique line for this instance:
+INFO:     Started server process [35895]
+
 I performed the COBOL core practice on this run.
+
+
 
 ## COBOL Practice
 
 - Lab run #6
 - Instance ID -i-088ee9e2809b6903a
-    1. `./cobol/bin/payment_post EM-0001 100001 125.50 USD INV-1001` - This command successfully posts a payment and returns the success code `0`
 
-    2. `./cobol/bin/account_lookup 123456` this command searches for account#999999. Since there is no account with that number, we get an error code `4`
-    3. `./cobol/bin/payment_post EM-0001 100001 000.00 123 INV-1002` This command attempts to post a payment with a value of '0' which is rejected with the error code `8`
-    4. I could not figure out how to generate a return code 12.
+Command run: ./cobol/bin/account_lookup 100001
+
+Output:
+ACCOUNT=100001
+NAME=Alice Johnson
+STATUS=ACTIVE
+BALANCE=5000.00
+CURRENCY=USD
+
+Code: 0 Success
+
+Command Run: ./cobol/bin/account_lookup 999999
+
+Output:
+ERROR=ACCOUNT NOT FOUND
+ACCOUNT=999999
+
+4 — account not found
+
+Command Run: ./cobol/bin/payment_post TXN-XX-0001 100001 0.00 USD TEST-ZERO
+
+output:
+TXN=TXN-XX-0001
+ACCOUNT=100001
+AMOUNT=0.00
+CURRENCY=USD
+STATUS=REJECTED
+REASON=AMOUNT MUST BE GREATER THAN ZERO
+
+
+Command run: (this was run from the wrong folder) /opt/balerica-bank/cobol/bin/account_lookup 100001
+
+output:
+
+ERROR=CANNOT OPEN data/accounts.dat
+FILE-STATUS=35
+-------
+
+
+sqlite is installed on the system. The bank keeps a table called "accounts" nad one called "transactions" as shown by the output below:
+
+[ec2-user@ip-172-31-36-241 balerica-bank]$ sqlite3 data/bank.db ".tables"
+accounts      transactions
+[ec2-user@ip-172-31-36-241 balerica-bank]$ sqlite3 data/bank.db ".schema"
+CREATE TABLE accounts (
+    account_id TEXT PRIMARY KEY,
+    customer_name TEXT NOT NULL,
+    status TEXT NOT NULL,
+    balance REAL NOT NULL,
+    currency TEXT NOT NULL
+);
+CREATE TABLE transactions (
+    transaction_id TEXT PRIMARY KEY,
+    account_id TEXT NOT NULL,
+    amount REAL NOT NULL,
+    currency TEXT NOT NULL,
+    status TEXT NOT NULL,
+    reference TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

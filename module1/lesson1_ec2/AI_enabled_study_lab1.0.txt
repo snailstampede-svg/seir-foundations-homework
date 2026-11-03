@@ -1,1 +1,46 @@
 
+=== Topic 1: Databases ===
+Read:    (title + link)
+Watched: (title + link)
+AI used: ?
+Prompt(s) I asked the AI:
+One thing the AI said that I double-checked, and what I found:
+
+Paragraph (minimum 5 sentences):
+
+Numbers + sources:
+- (number) — (source, year)
+
+=== Topic 2: COBOL ===
+...
+
+---------------------------------------------------------------
+
+
+Databases
+
+
+There are a 7 distinct database categories currently in use in the cloud:
+1. Relational
+2. Document
+3. Key-Value
+4. Wide-Column
+5. Graph
+6. Vector
+7. Analytics (OLAP)
+
+Selecting the appropriate database requires that you balance the need for performance vs operational complexity. Many situations my require a combination of Relational and NoSQL type database. The final decision may also include the requirements for read/write speeds, connection concurrency, schema type, along with cost. De Facto industry standards in clude:
+1. PostgreSQL for Online Transaction Processing
+2. Redis for Distributed Caching and in-memory storage
+3. MongoDB for Document Databases
+4. Snowflake & GCP BigQuery.for Data Warehousing
+
+
+COBOL
+
+
+COBOL (Common Business-Oriented Language) was developed in 1959, with the cooperation between CODASYL Committee funded by the US Department of Defance and led by and Grace Hopper.It was designed to allow non-programmer business analysts to audit business logic.COBOL remains as the underlying operation core of major banking systems, enterprise codebases, ATM transactions and mainframe workloads.The majority of COBOL developers are close to or over retirement age (55-58 years old) and the number of new (young) COBOL developers is extremely low as less than 1% of CS programs still teach COBOL.
+
+SWIFT
+
+SWIFT (Society for Worldwide Interbank Financial Telecommunication)was founded in May 1973 in Brussels , Belgium by a consortium of 293 banks across 15 countries to address fragmentation and security concerns in financial telecom. SWIFT was developed to replace the TELEX network which was an unencrypted telegraph network. SWIFT is not a money-movement system as it does not hold accounts, clear funds or manage balance sheets. Instead, it simply transmits payment instructions that are settled at the endpoint. The main competitors to SWIFT include CIPS (China), SPFS (Russia), RippleNet/XRP and Fiat Stablecoins (both Blockchain/crypto currencies). The main barrier to replace SWIFT is the network effect since there are so many different competitors, most banks would prefer to have a central network that talks to all other banks.

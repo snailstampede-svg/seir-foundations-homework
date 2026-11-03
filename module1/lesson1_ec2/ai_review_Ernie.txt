@@ -1,0 +1,66 @@
+AI used = Gemini
+Conversation share link = https://share.gemini.google/32TsFKs9HlRu
+
+Q1: Why does executing ./cobol/bin/account_lookup 100001 result in a FILE-STATUS=35 or return code 12 error if run immediately after login, and what specific cd command must be executed to resolve it?
+AI's answer, in my own words: The command returns an error because the command is being run from the wrong relative path. The command needs to be executed from within the /opt/balerica-bank direcory.
+How I checked it: I ran the command from my home directory and got the return code 12, but when I ran it in the /opt/balerica-bank direcory it ran successfully with return code 0. Output from test is shown below:
+
+[ec2-user@ip-172-31-41-140 ~]$ pwd
+/home/ec2-user
+[ec2-user@ip-172-31-41-140 ~]$ /opt/balerica-bank/cobol/bin/account_lookup 100001
+ERROR=CANNOT OPEN data/accounts.dat
+FILE-STATUS=35
+[ec2-user@ip-172-31-41-140 ~]$ echo $?
+12
+[ec2-user@ip-172-31-41-140 ~]$ cd /opt/balerica-bank/
+[ec2-user@ip-172-31-41-140 balerica-bank]$ ./cobol/bin/account_lookup 100001
+ACCOUNT=100001
+NAME=Alice Johnson
+STATUS=ACTIVE
+BALANCE=5000.00
+CURRENCY=USD
+[ec2-user@ip-172-31-41-140 balerica-bank]$
+
+
+
+Q2: When running legacy COBOL programs like payment_post or account_lookup, what is the functional difference between receiving a return code of 4 versus a return code of 8?
+
+AI's answer, in my own words: The difference depends on whether the problem with the account itself (whether it exists or is active) or is there a problem with the logic being executed in the command.
+
+How I checked it: I ran separate commands to initiate specific return codes. ./cobol/bin/account_lookup 999999 gives return code 4 because account#999999 does not exist in the database. ./cobol/bin/payment_post TXN-XX-0001 100001 0.00 USD TEST-ZERO returns error code 12 because the business logic does not allow a posting an amount of 0.
+
+
+[ec2-user@ip-172-31-41-140 balerica-bank]$ ./cobol/bin/account_lookup 999999
+ERROR=ACCOUNT NOT FOUND
+ACCOUNT=999999
+[ec2-user@ip-172-31-41-140 balerica-bank]$ echo $?
+4
+[ec2-user@ip-172-31-41-140 balerica-bank]$ ./cobol/bin/payment_post TXN-XX-0001 100001 0.00 USD TEST-ZERO
+TXN=TXN-XX-0001
+ACCOUNT=100001
+AMOUNT=0.00
+CURRENCY=USD
+STATUS=REJECTED
+REASON=AMOUNT MUST BE GREATER THAN ZERO
+[ec2-user@ip-172-31-41-140 balerica-bank]$ echo $?
+8
+[ec2-user@ip-172-31-41-140 balerica-bank]$
+
+
+Q3: Why is it necessary to open a second SSH terminal window in Step 5 before running commands like curl [http://127.0.0.1:8000/status](http://127.0.0.1:8000/status) or executing the SWIFT traffic generator script? How can I test this?
+
+AI's answer, in my own words: When a process runs in the foreground, it takes full control of the terminal session and does not allow any other process to run in that terminal or other commands to be initiated. If you press Ctrl-C you will gain control of the terminal but stop the process you need. Therefore, you need to keep that process running and execute your other commands in a separate terminal session.
+
+How I checked it: This was done as part of the runbook where we started the uvicorn session and had to open a separate terminal windoow to enter additional commands to interacti with the server.
+
+
+Q4: In the fixed-width ledger file (data/accounts.dat), how is a balance represented across columns 45–56, and why does a raw value like 000000012550 translate to 125.50?
+
+AI's answer, in my own words: COBOL uses the picture clause PIC 9(10)V99. PIC 9(10) in the field width to allocate 10 digits for the integer and V99 to allocate 2 digits for the decimal places. COBOL stores monetary values with implied decimals in order to save storage and simplify processing.
+
+How I checked it: I ran 2 commands to show how the monetary values were displayed and parsed. When I posted a payment of 125.99 it was stored in the data/payments.dat file as 100001000000012599USDPOSTED showing that the decimal point was stripped when written to the fixed-width file.
+
+
+Q1: If the POST /ask endpoint continuously returns "source": "offline-knowledge-base" even after configuring Amazon Bedrock, what three specific environment configuration requirements must be verified?
+AI's answer, in my own words:
+How I checked it : I was not able to test this functionality at this poiht, but the understanding remains that each of these 3 confirguration requirements must be satisfied for Bedrock to respond.
