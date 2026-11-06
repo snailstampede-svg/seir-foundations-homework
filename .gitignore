@@ -52,6 +52,7 @@ terraform.rc
 *.rpm
 rpm_packages/
 *.zip
+.env
 venv/
 scripts/__pycache__
 __pycache__
