@@ -1,0 +1,67 @@
+# Homework notes- 11-5-2026
+
+
+## Notes for lesson2_slack Homework.
+1. The script runs and sends whatever is inside the message field. In my case I edited my name. I could have edited the script to send any message I needed to relay.
+
+2. The script essentially runs a loop with each severity level["INFO", "WARNING", "ERROR", "CRITICAL"]. For hw2_severity_tour.py, when the severity in the .env file is set to `SLACK_ALERT_SEVERITY=INFO`the script forwards all messages with severity INFO and above. Since INFO is the lowest severity, all messages are forwarded when this script is executed.
+When the .env was edited with `SLACK_ALERT_SEVERITY=ERROR` only 2 messages were sent to slack. This happens because the .nv filters every message below  the "ERROR" setting in the .env file.
+
+3. Servers speak UTC because it is universally accepted and unambiguous. There is no Daylight Savings time (spring forward or fall back) It is a standard and ALL important clocks speak it. In short, UTC is a fixed, atomic-clock-based reference (maintained by the BIPM from ~450 atomic clocks worldwide) that no local offset can perturb, making it the only sane common denominator for distributed systems.
+
+My clock is currently 2:01PM PST and UTC is 22:01 UTC there is an 8-hour difference
+
+4. The hw4_disk_watch, runs calculations based on the system's disk usage. Once it determines the usage level it sets a severity level based on that usage level and sends a message.
+`if percent_used >= 90:
+    severity = "ERROR"
+elif percent_used >= 75:
+    severity = "WARNING"
+else:
+    severity = "INFO"`
+If the usage is >=90%, the severity level is set to ERROR
+if the usage is >=75%, the severity level is set to WARNING
+otherwise the severity level is set to INFO
+
+A quiet INFO here is GOOD design because you don't want to be generating useless and annoying alerts. You don't want to be alerted when things are good; you want to be alerted when things are not working right.
+
+5.The script checks the average load on the CPU(s) over the last 1, 5 and 15 minutes and sets the alert level to WARNING if the average cpu load over the last 5 minutes is greater than the cpu count. This means the server is busy.
+The reason this would happen is if Balerica Bank gets bombarded by requests or even an attack.
+
+6. The script generates a random incident with different severity levels. I believe a severity level of CRITICAL is enough to get someone out of bed at 3AM. All the other errors could just mean there are spikes in traffic and could self-resolve.
+
+
+### Experiments:
+1. Set SLACK_ALERT_SEVERITY=CRITICAL in .env and rerun script 2. Predict first: how many of the four messages will arrive?
+- Prediction: When the severity level is set to CRITICAL in .env, and script #2 is run, I will receive only on message (CRITICAL).
+- Outcome: Only the CRITICAL message was delivered. Shown in my screenshot.
+
+2. When the SLACK_ALERTS_ENABLED=false, the script ran but no messages were delivered all messages were skipped.
+`
+(venv) [ec2-user@ip-172-31-22-137 balerica-bank]$ python hw1_hello_slack.py
+Skipped. Check .env: SLACK_ALERTS_ENABLED must be true and SLACK_ALERT_SEVERITY=INFO (see homework README).
+(venv) [ec2-user@ip-172-31-22-137 balerica-bank]$
+`
+
+3. I changed the threshold to the following:
+
+`# The engineering decision: how full is "worth waking a human for"?
+if percent_used >= 90:
+    severity = "ERROR"
+elif percent_used >= 20:
+    severity = "WARNING"
+`
+
+When I reran the code, the severity changed to WARNING.
+
+`
+(venv) [ec2-user@ip-172-31-22-137 balerica-bank]$ python hw4_disk_watch.py
+Disk is 25.6% used -> severity WARNING.
+Skipped by threshold — that can be correct behavior!
+In your notes: why is a quiet INFO here GOOD design, not a failure?
+`
+4. All settings returned to normal.
+`
+SLACK_ALERTS_ENABLED=true
+SLACK_ALERT_SEVERITY=INFO
+
+`
